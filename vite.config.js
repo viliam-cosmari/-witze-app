@@ -1,3 +1,3 @@
 export default {
-  base: "/witze-app",
+  base: "/-witze-app/",
 };
