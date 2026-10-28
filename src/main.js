@@ -4,6 +4,8 @@ import { fetchJoke } from "./fetching.js";
 const currentJokeEl = document.querySelector(".current-joke__text");
 const loadNewJokeBtn = document.querySelector(".current-joke__generate");
 const saveJokeBtn = document.querySelector(".current-joke__save");
+const savedJokeListEl = document.querySelector(".saved-joke__list");
+const savedJokeTemplate = document.querySelector("#saved-joke-template");
 
 let currentJoke = "";
 let savedJokes = [];
@@ -17,10 +19,19 @@ async function loadNewJoke() {
 
 loadNewJokeBtn.addEventListener("click", loadNewJoke);
 
+function renderSavedJokes() {
+  savedJokeListEl.replaceChildren();
+  savedJokes.forEach((joke) => {
+    const jokeItem = savedJokeTemplate.content.cloneNode(true);
+    jokeItem.querySelector(".saved-joke__text").textContent = joke;
+    savedJokeListEl.append(jokeItem);
+  });
+}
+
 saveJokeBtn.addEventListener("click", () => {
   if (!savedJokes.includes(currentJoke)) {
     savedJokes.push(currentJoke);
-    console.log(savedJokes);
+    renderSavedJokes();
   }
 });
 
