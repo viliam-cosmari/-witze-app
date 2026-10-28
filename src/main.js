@@ -21,9 +21,17 @@ loadNewJokeBtn.addEventListener("click", loadNewJoke);
 
 function renderSavedJokes() {
   savedJokeListEl.replaceChildren();
+
   savedJokes.forEach((joke) => {
     const jokeItem = savedJokeTemplate.content.cloneNode(true);
     jokeItem.querySelector(".saved-joke__text").textContent = joke;
+
+    const removeBtn = jokeItem.querySelector(".saved-joke__remove");
+
+    removeBtn.addEventListener("click", () => {
+      savedJokes = savedJokes.filter((savedJoke) => savedJoke !== joke);
+      renderSavedJokes();
+    });
     savedJokeListEl.append(jokeItem);
   });
 }
