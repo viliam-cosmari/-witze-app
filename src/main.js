@@ -8,7 +8,7 @@ const savedJokeListEl = document.querySelector(".saved-joke__list");
 const savedJokeTemplate = document.querySelector("#saved-joke-template");
 
 let currentJoke = "";
-let savedJokes = [];
+let savedJokes = JSON.parse(localStorage.getItem("savedJokes")) ?? [];
 
 async function loadNewJoke() {
   const joke = await fetchJoke();
@@ -18,6 +18,10 @@ async function loadNewJoke() {
 }
 
 loadNewJokeBtn.addEventListener("click", loadNewJoke);
+
+function saveStorage() {
+  localStorage.setItem("savedJokes", JSON.stringify(savedJokes));
+}
 
 function renderSavedJokes() {
   savedJokeListEl.replaceChildren();
@@ -30,6 +34,7 @@ function renderSavedJokes() {
 
     removeBtn.addEventListener("click", () => {
       savedJokes = savedJokes.filter((savedJoke) => savedJoke !== joke);
+      saveStorage();
       renderSavedJokes();
     });
     savedJokeListEl.append(jokeItem);
@@ -39,8 +44,9 @@ function renderSavedJokes() {
 saveJokeBtn.addEventListener("click", () => {
   if (!savedJokes.includes(currentJoke)) {
     savedJokes.push(currentJoke);
+    saveStorage();
     renderSavedJokes();
   }
 });
-
+renderSavedJokes();
 loadNewJoke();
