@@ -1,23 +1,50 @@
 import "./styles/main.scss";
-import { fetchJoke } from "./fetching.js";
+import { fetchJoke, fetchCategory } from "./fetching.js";
 
 const currentJokeEl = document.querySelector(".current-joke__text");
 const loadNewJokeBtn = document.querySelector(".current-joke__generate");
 const saveJokeBtn = document.querySelector(".current-joke__save");
 const savedJokeListEl = document.querySelector(".saved-joke__list");
 const savedJokeTemplate = document.querySelector("#saved-joke-template");
+const categoryEl = document.querySelector(".current-joke__category");
 
 let currentJoke = "";
 let savedJokes = JSON.parse(localStorage.getItem("savedJokes")) ?? [];
 
 async function loadNewJoke() {
-  const joke = await fetchJoke();
+  try {
+    const joke = await fetchJoke(categoryEl.value);
 
-  currentJokeEl.innerText = joke;
-  currentJoke = joke;
+    if (!joke) {
+      currentJokeEl.innerText = "Kein Witz gefunden";
+      currentJoke = "";
+    } else {
+      currentJokeEl.innerText = joke;
+      currentJoke = joke;
+    }
+  } catch (error) {
+    console.error(error);
+    currentJokeEl.innerText = "Witz konnte nicht geladen werden";
+    currentJoke = "";
+  }
+}
+
+async function loadCategories() {
+  try {
+    const categories = await fetchCategory();
+    categories.forEach((category) => {
+      const optionEl = document.createElement("option");
+      optionEl.textContent = category.name;
+      optionEl.value = category.name;
+      categoryEl.append(optionEl);
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 loadNewJokeBtn.addEventListener("click", loadNewJoke);
+categoryEl.addEventListener("change", loadNewJoke);
 
 function saveStorage() {
   localStorage.setItem("savedJokes", JSON.stringify(savedJokes));
@@ -42,7 +69,7 @@ function renderSavedJokes() {
 }
 
 saveJokeBtn.addEventListener("click", () => {
-  if (!savedJokes.includes(currentJoke)) {
+  if (currentJoke && !savedJokes.includes(currentJoke)) {
     savedJokes.push(currentJoke);
     saveStorage();
     renderSavedJokes();
@@ -50,3 +77,4 @@ saveJokeBtn.addEventListener("click", () => {
 });
 renderSavedJokes();
 loadNewJoke();
+loadCategories();
