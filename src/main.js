@@ -47,6 +47,12 @@ async function loadCategories() {
 
 themeSwitchEl.addEventListener("change", () => {
   document.body.classList.toggle("light", themeSwitchEl.checked);
+
+  if (themeSwitchEl.checked) {
+    localStorage.setItem("theme", "light");
+  } else {
+    localStorage.setItem("theme", "dark");
+  }
 });
 
 loadNewJokeBtn.addEventListener("click", loadNewJoke);
@@ -84,3 +90,8 @@ saveJokeBtn.addEventListener("click", () => {
 renderSavedJokes();
 loadNewJoke();
 loadCategories();
+
+if (localStorage.getItem("theme") === "light") {
+  themeSwitchEl.checked = true;
+  document.body.classList.add("light");
+}
