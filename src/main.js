@@ -34,7 +34,8 @@ async function loadCategories() {
     const categories = await fetchCategory();
     categories.forEach((category) => {
       const optionEl = document.createElement("option");
-      optionEl.textContent = category.name;
+      const label = category.name[0].toUpperCase() + category.name.slice(1);
+      optionEl.textContent = label;
       optionEl.value = category.name;
       categoryEl.append(optionEl);
     });
