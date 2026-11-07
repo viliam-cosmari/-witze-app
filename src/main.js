@@ -7,6 +7,7 @@ const saveJokeBtn = document.querySelector(".current-joke__save");
 const savedJokeListEl = document.querySelector(".saved-joke__list");
 const savedJokeTemplate = document.querySelector("#saved-joke-template");
 const categoryEl = document.querySelector(".current-joke__category");
+const themeSwitchEl = document.querySelector(".theme-switch__input");
 
 let currentJoke = "";
 let savedJokes = JSON.parse(localStorage.getItem("savedJokes")) ?? [];
@@ -43,6 +44,10 @@ async function loadCategories() {
     console.error(error);
   }
 }
+
+themeSwitchEl.addEventListener("change", () => {
+  document.body.classList.toggle("light", themeSwitchEl.checked);
+});
 
 loadNewJokeBtn.addEventListener("click", loadNewJoke);
 categoryEl.addEventListener("change", loadNewJoke);
